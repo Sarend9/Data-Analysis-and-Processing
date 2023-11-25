@@ -40,10 +40,7 @@ x1_ABC <- rbind(x1_A, x1_B, x1_C)
 
 
 #    2.1.1) Подключим функцию для быстрого расчета статического вывода:
-            directory_path <- getwd()
-            functions_file <- "/resources/R_test_func2.R"
-            source(paste0(directory_path, functions_file))
-            rm(functions_file)
+            source(file.path("..", "resources", "R_test_func2.R"))
 
 
 #    2.1.2) Используем функцию Static_output(x, CL_n, CL_n_group, p_SEp),
