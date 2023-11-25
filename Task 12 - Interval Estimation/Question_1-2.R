@@ -40,15 +40,16 @@ x1_ABC <- rbind(x1_A, x1_B, x1_C)
 
 
 #    2.1.1) Подключим функцию для быстрого расчета статического вывода:
-            source(file.path("..", "resources", "R_test_func2.R"))
-
+            script_dir <- dirname(rstudioapi::getActiveDocumentContext()$path)
+            script_path <- file.path(script_dir, "..", "resources", "R_test_func2.R")
+            source(script_path)
 
 #    2.1.2) Используем функцию Static_output(x, CL_n, CL_n_group, p_SEp),
 #           где CL_n - уровень доверия для основного расчета,
 #               CL_n_group - для расчета по группам (если есть), изначально NULL и не считается.
 #           Т.к. здесь выборочная доля не нужна, игнорируем p_Sep и вводим следующее:
 
-Static_output(x1_ABC, 90, 95)
+            Static_output(x1_ABC, 90, 95)
 
 #           -/ПРИМЕЧАНИЕ/-
 #           В функции все подробно расписано как и что считается.            
@@ -61,7 +62,7 @@ Static_output(x1_ABC, 90, 95)
 
 #           ИЗ ЭТОЙ ФУНКЦИИ НУЖЕН ТОЛЬКО η2               
 
-Anova.disp(x1_ABC)
+            Anova.disp(x1_ABC)
 
 
 

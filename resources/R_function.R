@@ -245,9 +245,9 @@ x.result <- function(x, help = FALSE){
   
   x.skewness <- sum((x - mean(x)) ^ 3)/(length(x)*(sqrt(x.var(x)))^3)     # skewness(x, na.rm = TRUE)
   x.kurtosis <- sum((x - mean(x)) ^ 4)/(length(x)*(sqrt(x.var(x)))^4)-3   # kurtosis(x, na.rm = TRUE)-3
-  if (x.skewness < (0.1) &  x.skewness>(-0.1)){x.skew<-c("близко к симметричному")}
-  if (x.skewness < (-0.1)){x.skew<-c("левосторонняя асимметрия")}
-  if (x.skewness > (0.1)) {x.skew<-c("правосторонняя асимметрия")}
+  if (x.skewness < (0.1) & x.skewness > (-0.1)) {x.skew<-c("близко к симметричному")}
+  if (x.skewness < (-0.1)) {x.skew<-c("левосторонняя асимметрия")}
+  if (x.skewness > (0.1))  {x.skew<-c("правосторонняя асимметрия")}
   
   cat('\033[1m', "меры центральной тенденции", '\033[0;0m'                         ,"\n")
   cat("---------------------------------------------------------"                                 ,"\n")

@@ -5,10 +5,10 @@ data_frame <- read.csv(paste0(dirname(rstudioapi::getSourceEditorContext()$path)
 rm(data_file)
 
 # Загрузка пользовательских функций
-directory_path <- getwd()
-functions_file <- "/resources/R_function.R"
-source(paste0(directory_path, functions_file))
-rm(functions_file)
+script_dir <- dirname(rstudioapi::getActiveDocumentContext()$path)
+script_path <- file.path(script_dir, "..", "resources", "R_function.R")
+source(script_path)
+
 
 # • Централизация и найдите Q1 - 1-й, или нижний квартиль
 centered_data <- x.centering(data_frame$variable)

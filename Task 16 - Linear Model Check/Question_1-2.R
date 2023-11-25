@@ -68,14 +68,12 @@
       DF
       
       # или моя функция:
-      
-     directory_path <- getwd()
-     functions_file <- "/resources/R_function.R"
-     source(paste0(directory_path, functions_file))
-     rm(functions_file)
+     script_dir <- dirname(rstudioapi::getActiveDocumentContext()$path)
+     script_path <- file.path(script_dir, "..", "resources", "R_function.R")
+     source(script_path)
 
       
-      Static_output(x1, CL_n_group = 90, CL_n = 90)
+     Static_output(x1, CL_n_group = 90, CL_n = 90)
       
 # 5) Интепретация:
 

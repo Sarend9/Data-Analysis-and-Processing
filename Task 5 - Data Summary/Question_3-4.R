@@ -7,10 +7,9 @@
 names(таблица_частот) <- значения_сбитых_кеглей        # присоединяем значения к их частотам
 
 # Загрузка пользовательских функций
-путь_к_каталогу <- getwd()
-файл_функций <- "/resources/R_function.R"
-source(paste0(путь_к_каталогу, файл_функций))
-rm(файл_функций)
+script_dir <- dirname(rstudioapi::getActiveDocumentContext()$path)
+script_path <- file.path(script_dir, "..", "resources", "R_function.R")
+source(script_path)
 
 # Анализ результатов боулинга
 результат_боулинга <- list(

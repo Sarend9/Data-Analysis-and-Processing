@@ -40,11 +40,10 @@
      
 # Вопрос 10:  
      # Удаляю имя папки и получаю путь в общий каталог
-     directory_path <- getwd()
-     functions_file <- "/resources/R_function.R"
-     source(paste0(directory_path, functions_file))
-     rm(functions_file)
-    
-     x.result(x9[[2]][x9[[1]]==1])
-     x.result(x9[[2]][x9[[1]]==2])
+     script_dir <- dirname(rstudioapi::getActiveDocumentContext()$path)
+     script_path <- file.path(script_dir, "..", "resources", "R_function.R")
+     source(script_path)
+
+     x.result(x9[[2]][x9[[1]]=="A"])
+     x.result(x9[[2]][x9[[1]]=="B"])
      
