@@ -54,8 +54,8 @@ x2 <- read.csv(paste0(dirname(rstudioapi::getSourceEditorContext()$path), "/", f
      
      
 #         2.1.1) Напишем функцию, которая выдаст таблицу со всеми ответами:  
-                 x.Stat <- function(vectot, var=NULL){
-                   a<-1
+                x_stat <- function(input_vector, index = 1, variable = NULL) 
+                  {
            
 #         В статистическом выводе анализируем изменчивость признаков при частотном подходе 
 #         имея дело с двумя распределениями одной и той же переменной: 
@@ -72,7 +72,7 @@ x2 <- read.csv(paste0(dirname(rstudioapi::getSourceEditorContext()$path), "/", f
                        
 #         2.1.2) Характеристика (Сводные характеристики распределения генеральной совокупности):  
                   
-                 μ  <- mean(vectot[[a]]); μ
+                 μ  <- mean(input_vector[[index]])
                  
 #                • Несмещённость (unbiasedness) оценки — это свойство её математического ожидания 
 #                  (теоретического среднего) совпадать с истинным значением параметра.
@@ -80,8 +80,8 @@ x2 <- read.csv(paste0(dirname(rstudioapi::getSourceEditorContext()$path), "/", f
 #                  Выборочная доля градации переменной — это несмещённое (unbiased) средство оценивания её доли в генеральной совокупности. 
 #                  Несмещёнными оценками соответствующих параметров служат также выборочное среднее и некоторые другие статистики.
                  
-                 σ2 <- sum((vectot[[a]] - mean(vectot[[a]]))^2)/length(vectot[[a]]); σ2
-                 σ  <- sqrt(σ2); σ
+                 σ2 <- sum((input_vector[[index]] - mean(input_vector[[index]]))^2) / length(input_vector[[index]])
+                 σ  <- sqrt(σ2)
                  
        
 #         2.1.3) Статистика:
@@ -90,37 +90,30 @@ x2 <- read.csv(paste0(dirname(rstudioapi::getSourceEditorContext()$path), "/", f
 #                но можем найти только их приблизительные значения.
 #                (приближённые вычисления называются оцениванием (estimation)).
                  
-                 x  <- sum(vectot[[a]])/(length(vectot[[a]])); vectot
-                 s2 <- var(vectot[[a]]); s2
-                 s  <- sd(vectot[[a]]); s
+                 x  <- sum(input_vector[[index]]) / length(input_vector[[index]])
+                 s2 <- var(input_vector[[index]])
+                 s  <- sd(input_vector[[index]])
        
 #         2.1.4) Функция R
-                 if (μ == x ) {R.μ.x   <-"совпадают"}
-                 if (σ2== s2) {R.σ2.s2 <-"совпадают"} 
-                 if (σ == s ) {R.σ.s   <-"совпадают"} 
+                 R_μ_x <- ifelse(round(μ, 6) == round(x, 6), "совпадают", ifelse(μ < x, "выборочное", "генеральное"))
+                 R_σ2_s2 <- ifelse(round(σ2, 6) == round(s2, 6), "совпадают", ifelse(σ2 < s2, "выборочное", "генеральное"))
+                 R_σ_s <- ifelse(round(σ, 6) == round(s, 6), "совпадают", ifelse(σ < s, "выборочное", "генеральное"))
                  
-                 if (μ  < x ) {R.μ.x   <-"выборочное"} 
-                 if (σ2 < s2) {R.σ2.s2 <-"выборочное"} 
-                 if (σ  < s ) {R.σ.s   <-"выборочное"} 
-                 
-                 if (μ  > x ) {R.μ.x   <-"генеральное"} 
-                 if (σ2 > s2) {R.σ2.s2 <-"генеральное"} 
-                 if (σ  > s ) {R.σ.s   <-"генеральное"}                  
-                
-                 x.DF <- data.frame("характеристика"= c(μ, σ2, σ), 
+                 x_df <- data.frame("характеристика"= c(μ, σ2, σ), 
                                     "статистика"    = c(x, s2, s),
-                                    "Функция R"     = c(R.μ.x, R.σ2.s2, R.σ.s))
+                                    "Функция R"     = c(R_μ_x, R_σ2_s2, R_σ_s))
          
-                 if (is.null(var)) {return(x.DF)}
-                 if (var=="μ")     {return(μ)}
-                 if (var=="σ2")    {return(σ2)}
-                 if (var=="σ")     {return(σ)}
-                 if (var=="x")     {return(x)}
-                 if (var=="s2")    {return(s2)}
-                 if (var=="s")     {return(s)}}
+                 if (is.null(variable)) {return(x_df)}
+                 if (variable=="μ")     {return(μ)}
+                 if (variable=="σ2")    {return(σ2)}
+                 if (variable=="σ")     {return(σ)}
+                 if (variable=="x")     {return(x)}
+                 if (variable=="s2")    {return(s2)}
+                 if (variable=="s")     {return(s)}
+                 }
           
 #         2.1.5) Ответ:                 
-                 x.Stat(x2)
+                 print(x_stat(x2))
           
      
 #    2.2) Оцените по этой выборке стандартные ошибки:  
@@ -158,8 +151,8 @@ x2 <- read.csv(paste0(dirname(rstudioapi::getSourceEditorContext()$path), "/", f
 #                Т.е. если будем таким способом оценивать, то в 2/3 случаев наш результат +- 1 стандартное отклоение от генерального отклонения.                          
                  
                  n  <- length(x2[[1]])
-                 σ  <- x.Stat(x2, "σ")
-                 s  <- x.Stat(x2, "s")
+                 σ  <- x_stat(x2, variable = "σ")
+                 s  <- x_stat(x2, variable = "s")
                  
                  SEM_σ <- σ/sqrt(n);  SEM_σ
 #                Формула дает точное значение стандартной ошибки, но 
@@ -186,7 +179,10 @@ x2 <- read.csv(paste0(dirname(rstudioapi::getSourceEditorContext()$path), "/", f
 #         2.2.2) Доля студентов вуза, чья успеваемость не превышает 58%:
 #                ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯    
 #                p - доля (proportion) 
-                 p <- pnorm(59, mean = mean(x2[[1]]), sd = x.Stat(x2, "σ"))
+                 p <- pnorm(59, mean = x_stat(x2, variable = "μ"), sd = x_stat(x2, variable = "σ"))
+                 
+                 print("Доля студентов вуза, чья успеваемость не превышает 58%:")
+                 print(nrow(subset(x2, performance <= 58)) / nrow(x2))
                  
 #         2.2.3) Стандартная ошибку такой выборочной доли SEp:
 #                ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
@@ -204,6 +200,9 @@ x2 <- read.csv(paste0(dirname(rstudioapi::getSourceEditorContext()$path), "/", f
                  σ2 <- p*(1-p)
                  
                  SEp <- sqrt(σ2/n);  SEp
+                 
+                 print("Стандартная ошибка такой выборочной доли SEp:")
+                 print(SEp)
                  
 #               Интерпретируется SEp аналогично SEM, как наибольшее отклонение выборочной 
 #               доли от доли генеральной совокупности примерно в 2/3 выборок такого же объёма.
@@ -238,6 +237,10 @@ x2 <- read.csv(paste0(dirname(rstudioapi::getSourceEditorContext()$path), "/", f
 #         2.3.3) Переводим найденную величину в значение исходной шкалы, умножим её на SE.
 #                Проученный результат - погрешность с уровнем доверимем ⍺.
                  MOE <- (0-z) * SEp;  MOE
+                 
+                 print("Статистическая погрешность MOE с CL = 95%:")
+                 print(MOE)
+                 
                  
       
 #    2.4) Определите, какой нужен объем выборки, чтобы погрешность оценки доли уменьшить:
