@@ -8,23 +8,22 @@ file <- "design_B.dat"; x1_B <- read.csv(paste0(dirname(rstudioapi::getSourceEdi
 file <- "design_C.dat"; x1_C <- read.csv(paste0(dirname(rstudioapi::getSourceEditorContext()$path), "/", file)); rm(file)
 
 
-# 1) Посмотрим данные:
-head(x1_A); head(x1_B); head(x1_C)
-str(x1_A); str(x1_B); str(x1_C); cat("\n\n")
+# 1)  Посмотрим данные:
+      head(x1_A); head(x1_B); head(x1_C)
+      str(x1_A); str(x1_B); str(x1_C); cat("\n\n")
 
-#    1.1) Присоединим по еще 1 столбцу с названием дизайнера:    
-x1_A$disigner <- "A"
-x1_B$disigner <- "B"
-x1_C$disigner <- "C"
+#   1.1) Присоединим по еще 1 столбцу с названием дизайнера:    
+         x1_A$disigner <- "A"
+         x1_B$disigner <- "B"
+         x1_C$disigner <- "C"
 
-# 2) Переменовываю столбцы:
+#   1.2) Переменовываю столбцы:
+         names(x1_A) <- c("procent","disigner")
+         names(x1_B) <- c("procent","disigner")
+         names(x1_C) <- c("procent","disigner") 
 
-names(x1_A) <- c("procent","disigner")
-names(x1_B) <- c("procent","disigner")
-names(x1_C) <- c("procent","disigner") 
-
-# 3) Теперь создадим из них общую таблицу:
-x1_ABC <- rbind(x1_A, x1_B, x1_C)
+#   1.3) Теперь создадим из них общую таблицу:
+         x1_ABC <- rbind(x1_A, x1_B, x1_C)
 
 # 2) Задание:
 
@@ -62,7 +61,7 @@ x1_ABC <- rbind(x1_A, x1_B, x1_C)
 
 #           ИЗ ЭТОЙ ФУНКЦИИ НУЖЕН ТОЛЬКО η2               
 
-            Anova.disp(x1_ABC)
+Anova.disp(x1_ABC)
 
 
 
@@ -75,35 +74,32 @@ x1_ABC <- rbind(x1_A, x1_B, x1_C)
 library(ggplot2)
 
 # 1) Подготовим данные для диаграммы и добавим в неё столбцы со значениями средних выборочных и границ CI.  
-# 1) Создадим данные для примера
-CI <- data.frame(
-  X = c(1, 2, 3, 4),
-  Y = c(10, 15, 13, 18),
-  Lower = c(8, 12, 11, 16),
-  Upper = c(12, 18, 15, 20)
-)
+     CI <- Static_output(x1_ABC, 90, 95); CI
 
-# 2) Построим базовую диаграмму
-ggplot(CI) +
-  aes(x = X, y = Y) +
-  geom_point() +
-  geom_errorbar(aes(ymin = Lower, ymax = Upper)) +
-  labs(title = "Диаграмма точечных и интервальных оценок средних\nпо данным производительности труда работников",
-       x = 'рабочее место',
-       y = 'производительность труда, %') +
-  theme_bw(base_size = 14) +
-  theme(plot.title = element_text(face = 'bold', hjust = 0.5))
+#    Пояснение: 1 столбец - группа, 
+#               2 столбец - нижние границы CI,
+#               3 столбец - средние,
+#               4 столбец - верхние границы CI.
 
-# 3) Сделаем диаграмму более выразительной, а также добавим подписи
-ggplot(CI) +
-  aes(x = X, y = Y) +
-  geom_errorbar(aes(ymin = Lower, ymax = Upper), width = 0.2, size = 1, color = "gray") +
-  geom_point(size = 4, color = "blue") +
-  labs(title = "Диаграмма точечных и интервальных оценок средних\nпо данным производительности труда работников",
-       x = 'рабочее место',
-       y = 'производительность труда, %') +
-  theme_bw(base_size = 14) +
-  theme(plot.title = element_text(face = 'bold', hjust = 0.5))
+# 2)  Теперь построим диаграмму точечных и интервальных оценок среднего по каждой выборке:
+      ggplot(CI) +
+        aes(x = CI[[1]], y = CI[[3]]) +
+        geom_point() +
+        geom_errorbar(aes(ymin = CI[[2]], ymax = CI[[4]]))
+
+# 4)  Теперь оформим нашу диаграмму как следует. 
+#     Для начала вернём привычный белый фон и размер шрифтов:
+      theme_set(theme_bw(base_size = 14))  # чёрно-белое оформление, базовый размер шрифта
+      theme_update(plot.title = element_text(face = 'bold', hjust = 0.5))  # жирный шрифт заголовка, выравнивание по центру
+
+# 5)  Сделаем диаграмму более выразительной, а также добавим подписи:         
+      ggplot(CI) +
+        aes(x = CI[[1]], y = CI[[3]]) +
+        geom_errorbar(aes(ymin = CI[[2]], ymax = CI[[4]]),
+                      width =  0.2, lwd = 1, col = "gray") +
+        geom_point(cex = 4, col = "blue") +
+        labs(title = "Данные о производительности труда работников, \n распределенных по рабочим местам с тремя вариантами дизайна",
+             x = 'рабочее место', y = 'производительность труда, %')
 
 
 
