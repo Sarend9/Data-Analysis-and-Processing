@@ -151,23 +151,32 @@ x3 <- read.csv(paste0(dirname(rstudioapi::getSourceEditorContext()$path), "/", f
           
   
 # СИНИЯ ЛИНИЯ                  
-plot(x3, xlab ="ОГЭ, [баллы]", ylab = "ЕГЭ, [баллы]", main = "Диаграмма рассеяния экзаменов")
+plot(x3, xlab ="ОГЭ, [баллы]", ylab = "ЕГЭ, [баллы]", main = "Зависимость баллов ЕГЭ от баллов ОГЭ:\nрегрессионная модель")
 
-abline(β0, β1, col = "steel blue")
-   
+abline(a = β0, 
+       b = β1, 
+       col = 'steel blue')
+
 
 # ФИОЛЕТОВАЯ ЛИНИЯ       
 β1.yx  <- β1 
 β1.inverse <- 1/β1.yx  # замена коэффициента регрессии на обратную величину
 β0.inverse <- μ_Y - (β1.inverse*μ_X)  # вычисление свободного члена
-abline(β0.inverse, β1.inverse,
+abline(a = β0.inverse, 
+       b = β1.inverse,
        col = 'maroon')
 
 # ЗЕЛЕНАЯ ЛИНИЯ  
 β1.full <- 1*(σ_Y/σ_X) 
 β0.full <- μ_Y - (β1.full*μ_X)
-abline(β0.full, β1.full,
-                 col = 'green3',
-                 lty = 'dotted', # пунктир
+abline(a = β0.full, b = β1.full,
+       col = 'green3',
+       lty = 'dotted', # пунктир
        lwd = 2)  # пунктир
           
+
+# Вывод результатов в консоль
+cat("Коэффициент детерминации R²:", R2, "\n")
+cat("Коэффициент Пирсона P:", P, "\n")
+cat("Коэффициент регрессии β1:", β1, "\n")
+cat("Свободный член регрессии β0:", β0, "\n")
