@@ -119,11 +119,8 @@ tapply(test$score, INDEX = list(test$type, test$method), FUN = mean)  # сред
 # 1) Дано:
 file <- "cold.dat"
 x3   <- read.csv(paste0(dirname(rstudioapi::getSourceEditorContext()$path), "/", file)); rm(file)
-str(x3)  #  вывод сведений о структуре объекта
+str(x3)  # вывод сведений о структуре объекта
 data<-x3
-
-
-
 
 data.st <- apply(data, MARGIN = 2, FUN = scale)
 data.st<- as.data.frame(data)
@@ -135,11 +132,13 @@ anova(model1, model0)  # проверка гипотезы
 
 vif(model0)  # вычисление VIF для всех предикторов в модели
 
-step(model0) # Выбор лучшей модели
+step_result <- step(model0) # Выбор лучшей модели
+b_stress <- coef(step_result)["stress"][[1]]
+print(paste("b_stress =", b_stress))
 
 model3 <- lm(cold ~ stress + mood, data = data.st)  # Выбранная модель = предикторы: требования и стресс
-summary(model3) # R2 выбранной модели + предиктора стресс
-#                             b_stress 
-sd(data$stress)/sd(data$cold)*0.03608  # Cтандартизованный вес предиктора стресс
-# Или
-sd(data$stress)/sd(data$cold)*(summary(model3)[[4]])[2]
+summary_model3 <- summary(model3) # R2 выбранной модели + предиктора стресс
+B_stress <- sd(data$stress)/sd(data$cold)*b_stress  # Cтандартизованный вес предиктора стресс
+print(paste("B_stress =", B_stress))
+
+
